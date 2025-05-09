@@ -1,0 +1,436 @@
+import sys
+from PyQt6.QtWidgets import QApplication, QMainWindow, QStackedWidget, QWidget, QPushButton, QVBoxLayout , QHBoxLayout , QGridLayout , QLabel , QLineEdit
+
+from Downloads.mh import window
+from inspect import stack
+
+
+class English_HomeWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Home")
+        self.account_history = {"time" : "mablagh bardasht ya variz"}
+        self.balance_account = 120000
+        self.password = 1234
+
+        self.stacked_widget = QStackedWidget()
+
+        self.home_page = QWidget()
+        self.balance_page = Balance_class(self.stacked_widget , self.balance_account)
+        self.cash_page = Cash_class(self.stacked_widget , self.balance_account)
+        self.transfer_page = Transfer_class(self.stacked_widget , self.balance_account)
+        self.changepassword_page = Change_password_class(self.stacked_widget)
+
+
+        balance = QPushButton("Balance")
+        balance.clicked.connect(self.show_balace_page)
+
+        cash = QPushButton("Cash")
+        cash.clicked.connect(self.show_cash_page)
+
+        change_password = QPushButton("Change password")
+        change_password.clicked.connect(self.show_change_password_page)
+
+        transfer = QPushButton("Transfer")
+        transfer.clicked.connect(self.show_transfer_page)
+
+        layout = QGridLayout()
+        layout.addWidget(balance, 0, 0)
+        layout.addWidget(cash, 0, 1)
+        layout.addWidget(change_password, 1, 0)
+        layout.addWidget(transfer, 1, 1)
+
+        self.home_page.setLayout(layout)
+
+        self.stacked_widget.addWidget(self.home_page)
+        self.stacked_widget.addWidget(self.balance_page)
+        self.stacked_widget.addWidget(self.cash_page)
+        self.stacked_widget.addWidget(self.transfer_page)
+        self.stacked_widget.addWidget(self.changepassword_page)
+
+
+        self.setCentralWidget(self.stacked_widget)
+        self.stacked_widget.setCurrentWidget(self.home_page)
+
+    def show_balace_page(self):
+        self.stacked_widget.setCurrentWidget(self.balance_page)
+    def show_cash_page(self):
+        self.stacked_widget.setCurrentWidget(self.page2)
+    def show_change_password_page(self):
+        self.stacked_widget.setCurrentWidget(self.cash_page)
+    def show_transfer_page(self):
+        self.stacked_widget.setCurrentWidget(self.transfer_page)
+
+
+
+class Persion_HomeWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("خانه")
+        self.balance_account = 120000
+        self.password = 1234
+
+        self.stacked_widget = QStackedWidget()
+
+        self.home_page = QWidget()
+        self.balance_page = Balance_class2(self.stacked_widget , self.balance_account)
+        self.cash_page = Cash_class2(self.stacked_widget , self.balance_account)
+        self.transfer_page = Transfer_class2(self.stacked_widget , self.balance_account)
+        self.changepassword_page = Change_password_class2(self.stacked_widget)
+
+
+        balance = QPushButton("موجودی")
+        balance.clicked.connect(self.show_balace_page)
+
+        cash = QPushButton("برداشت")
+        cash.clicked.connect(self.show_cash_page)
+
+        change_password = QPushButton("تغییر رمز")
+        change_password.clicked.connect(self.show_change_password_page)
+
+        transfer = QPushButton("انتقال")
+        transfer.clicked.connect(self.show_transfer_page)
+
+        layout = QGridLayout()
+        layout.addWidget(balance, 0, 0)
+        layout.addWidget(cash, 0, 1)
+        layout.addWidget(change_password, 1, 0)
+        layout.addWidget(transfer, 1, 1)
+
+        self.home_page.setLayout(layout)
+
+        self.stacked_widget.addWidget(self.home_page)
+        self.stacked_widget.addWidget(self.balance_page)
+        self.stacked_widget.addWidget(self.cash_page)
+        self.stacked_widget.addWidget(self.transfer_page)
+        self.stacked_widget.addWidget(self.changepassword_page)
+
+
+        self.setCentralWidget(self.stacked_widget)
+        self.stacked_widget.setCurrentWidget(self.home_page)
+
+    def show_balace_page(self):
+        self.stacked_widget.setCurrentWidget(self.balance_page)
+    def show_cash_page(self):
+        self.stacked_widget.setCurrentWidget(self.page2)
+    def show_change_password_page(self):
+        self.stacked_widget.setCurrentWidget(self.cash_page)
+    def show_transfer_page(self):
+        self.stacked_widget.setCurrentWidget(self.transfer_page)
+
+
+class Balance_class(QWidget):
+    def __init__(self , stack , balance_account):
+        super().__init__()
+        self.stack = stack
+        self.balance_account = balance_account
+        layout = QVBoxLayout()
+
+        self.balane_number = QLabel(f"{balance_account}")
+        self.cashable = QLabel(f"{balance_account - 5000}")
+        layout.addWidget(self.balane_number)
+        layout.addWidget(self.cashable)
+        self.button = QPushButton("Home")
+        self.button.clicked.connect(self.comeback_home)
+        layout.addWidget(self.button)
+        self.setLayout(layout)
+
+
+    def comeback_home(self):
+        self.stack.setCurrentWidget(self.stack.widget(0))
+
+class Cash_class(QWidget):
+    def __init__(self , stack , balance_account):
+        super().__init__()
+        layout = QVBoxLayout()
+        self.stack = stack
+        self.balance_account = balance_account
+
+        self.label = QLabel()
+        self.line_edit = QLineEdit()
+        self.line_edit.setPlaceholderText("enter the amount")
+        self.button = QPushButton("Ok")
+        self.button.clicked.connect(self.money)
+        self.button2 = QPushButton("Home")
+        self.button2.clicked.connect(self.comeback_home)
+
+        layout.addWidget(self.line_edit)
+        layout.addWidget(self.label)
+        layout.addWidget(self.button)
+        layout.addWidget(self.button2)
+        self.setLayout(layout)
+
+
+    def comeback_home(self):
+        self.stack.setCurrentWidget(self.stack.widget(0))
+
+
+    def money(self):
+        if self.line_edit.text() :
+            if self.balance_account <= self.cashable.text() :
+                self.label.setText("here your money")
+                self.balance_account -= float(self.line_edit.text())
+            else :
+                self.label.setText("your balance is not enough")
+        else :
+            self.label.setText("the amount is invalid")
+
+
+
+class Transfer_class(QWidget):
+    def __init__(self , stack , balance_account):
+        super().__init__()
+        self.stack = stack
+        self.balance_account = balance_account
+
+        layout = QVBoxLayout()
+
+        self.label = QLabel()
+        self.line_edit1 = QLineEdit()
+        self.line_edit2 = QLineEdit()
+        self.line_edit1.setPlaceholderText("enter the cart number")
+        self.line_edit2.setPlaceholderText("enter the amount")
+        self.button = QPushButton("transfer")
+        self.button.clicked.connect(self.money)
+        self.button2 = QPushButton("Home")
+        self.button2.clicked.connect(self.comeback_home)
+
+        layout.addWidget(self.line_edit1)
+        layout.addWidget(self.line_edit2)
+        layout.addWidget(self.label)
+        layout.addWidget(self.button)
+        layout.addWidget(self.button2)
+        self.setLayout(layout)
+
+    def comeback_home(self):
+        self.stack.setCurrentWidget(self.stack.widget(0))
+
+    def money(self):
+        if len(self.line_edit1.text()) == 16 :
+            if self.line_edit2.text() :
+                print("sakhgas")
+                if self.line_edit2.text() <= self.balance_account :
+                    self.balance_account -= float(self.line_edit.text())
+                    print(f"{self.balance_account}")
+                    self.label.setText("transfered seccesfully")
+                else:
+                    self.label.setText("your balance is not enough")
+        else :
+            self.label.setText("the amount is invalid")
+
+
+class Change_password_class(QWidget) :
+    def __init__(self , stack):
+        super().__init__()
+        layout = QVBoxLayout()
+
+
+        self.stack = stack
+        self.password = 1000
+        self.line_edit1 = QLineEdit()
+        self.line_edit1.setPlaceholderText("enter the new password")
+        self.line_edit2 = QLineEdit()
+        self.line_edit2.setPlaceholderText("repeat the password")
+        self.button = QPushButton("Ok")
+        self.button.clicked.connect(self.confirm_password)
+        layout.addWidget(self.line_edit1)
+        layout.addWidget(self.line_edit2)
+        layout.addWidget(self.button)
+        self.setLayout(layout)
+
+
+    def confirm_password(self):
+        if len(self.line_edit1.text()) == 4 and self.line_edit2.text() == self.line_edit1.text() :
+            self.password = int(self.line_edit1.text())
+            self.stack.setCurrentWidget(self.stack.widget(0))
+
+        else:
+            self.label.setText("password is invalid . please try again")
+
+
+class Balance_class2(QWidget):
+    def __init__(self , stack , balance_account):
+        super().__init__()
+        self.stack = stack
+        self.balance_account = balance_account
+        layout = QVBoxLayout()
+
+        self.balane_number = QLabel(f"{balance_account}")
+        self.cashable = QLabel(f"{balance_account - 5000}")
+        layout.addWidget(self.balane_number)
+        layout.addWidget(self.cashable)
+        self.button = QPushButton("خانه")
+        self.button.clicked.connect(self.comeback_home)
+        layout.addWidget(self.button)
+        self.setLayout(layout)
+
+
+    def comeback_home(self):
+        self.stack.setCurrentWidget(self.stack.widget(0))
+
+class Cash_class(QWidget):
+    def __init__(self , stack , balance_account):
+        super().__init__()
+        layout = QVBoxLayout()
+        self.stack = stack
+        self.balance_account = balance_account
+
+
+class Cash_class2(QWidget):
+    def __init__(self, stack, balance_account):
+        super().__init__()
+        layout = QVBoxLayout()
+        self.stack = stack
+        self.balance_account = balance_account
+
+        self.label = QLabel()
+        self.line_edit = QLineEdit()
+        self.line_edit.setPlaceholderText("مقدار وجه درخواستی")
+        self.button = QPushButton("برداشت")
+        self.button.clicked.connect(self.money)
+        self.button2 = QPushButton("خانه")
+        self.button2.clicked.connect(self.comeback_home)
+
+        layout.addWidget(self.line_edit)
+        layout.addWidget(self.label)
+        layout.addWidget(self.button)
+        layout.addWidget(self.button2)
+        self.setLayout(layout)
+
+    def comeback_home(self):
+        self.stack.setCurrentWidget(self.stack.widget(0))
+
+    def money(self):
+        if self.line_edit.text():
+            if self.balance_account <= self.cashable.text():
+                self.label.setText("پول خود را بردارید")
+                self.balance_account -= float(self.line_edit.text())
+            else:
+                self.label.setText("موجودی کافی نیست")
+        else:
+            self.label.setText("مقدار وارد شده صحیح نمی باشد")
+
+
+
+class Transfer_class2(QWidget):
+    def __init__(self , stack , balance_account):
+        super().__init__()
+        self.stack = stack
+        self.balance_account = balance_account
+
+        layout = QVBoxLayout()
+
+        self.label = QLabel()
+        self.line_edit1 = QLineEdit()
+        self.line_edit2 = QLineEdit()
+        self.line_edit1.setPlaceholderText("شماره کارت را وارد کنید")
+        self.line_edit2.setPlaceholderText("مقدار مبلغ انتقال")
+        self.button = QPushButton("انتقال")
+        self.button.clicked.connect(self.money)
+        self.button2 = QPushButton("خانه")
+        self.button2.clicked.connect(self.comeback_home)
+
+        layout.addWidget(self.line_edit1)
+        layout.addWidget(self.line_edit2)
+        layout.addWidget(self.label)
+        layout.addWidget(self.button)
+        layout.addWidget(self.button2)
+        self.setLayout(layout)
+
+    def comeback_home(self):
+        self.stack.setCurrentWidget(self.stack.widget(0))
+
+    def money(self):
+        if len(self.line_edit1.text()) == 16 :
+            if self.line_edit2.text() :
+                if self.line_edit2.text() <= self.balance_account :
+                    self.balance_account -= float(self.line_edit.text())
+                    print(f"{self.balance_account}")
+                    self.label.setText("انتقال با موفقیت انجام شد")
+                else:
+                    self.label.setText("موجودی کافی نیست")
+        else :
+            self.label.setText("مقدار وارد شده صحیح نمی باشد")
+
+
+
+
+class Change_password_class2(QWidget) :
+    def __init__(self , stack):
+        super().__init__()
+        layout = QVBoxLayout()
+
+        self.stack = stack
+        self.password = int
+        self.line_edit1 = QLineEdit()
+        self.line_edit1.setPlaceholderText("رمز جدید را وارد کنید")
+        self.line_edit2 = QLineEdit()
+        self.line_edit2.setPlaceholderText("رمز را تکرار کنید")
+        self.label = QLabel()
+        self.button = QPushButton("تغییر")
+        self.button.clicked.connect(self.confirm_password)
+        layout.addWidget(self.line_edit1)
+        layout.addWidget(self.line_edit2)
+        layout.addWidget(self.label)
+        layout.addWidget(self.button)
+        self.setLayout(layout)
+
+
+    def confirm_password(self):
+        if len(self.line_edit1.text()) == 4 and self.line_edit2.text() == self.line_edit1.text() :
+            self.password = int(self.line_edit1.text())
+            self.stack.setCurrentWidget(self.stack.widget(0))
+
+        else :
+           self.label.setText("رمز نامعتبر است لطفا دوباره تکرار کنید")
+
+
+
+
+class Check_password(QWidget) :
+    def __init__(self):
+        self.password_list = [1234]
+        self.line_edit = QLineEdit()
+        self.line_edit.setPlaceholderText("enter your password")
+        self.check()
+
+    def check(self):
+        if len(self.line_edit.text()) == 4 and int(self.line_edit.text()) in self.password_list :
+            window = English_HomeWindow()
+            window.show()
+
+
+class Check_password2(QWidget):
+    def __init__(self):
+        self.password_list = [1234]
+        self.line_edit = QLineEdit()
+        self.line_edit.setPlaceholderText("رمز خود را وارد کنید")
+        self.check()
+
+    def check(self):
+        if len(self.line_edit.text()) == 4 and int(self.line_edit.text()) in self.password_list:
+            window = Persion_HomeWindow()
+            window.show()
+
+
+
+
+
+
+if __name__ == "__main__" :
+    app = QApplication(sys.argv)
+    stack = QStackedWidget()
+    stack.setCurrentWidget(window)
+    engkhsh_check_password = Check_password()
+    persion_check_password = Check_password2()
+    window = QWidget()
+    layout = QHBoxLayout()
+    button1 = QPushButton("english")
+    button1.clicked.connect(lambda : stack.setCurrentWidget(engkhsh_check_password))
+    button2 = QPushButton("فارسی")
+    button2.clicked.connect(lambda : stack.setCurrentWidget(persion_check_password))
+    layout.addWidget(button1)
+    layout.addWidget(button2)
+    window.setLayout(layout)
+    window.show()
+    sys.exit(app.exec())
